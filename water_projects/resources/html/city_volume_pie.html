@@ -1,0 +1,262 @@
+<!--
+	此示例下载自 https://echarts.apache.org/examples/zh/editor.html?c=pie-simple&code=PYBwLglsB2AEC8sDeAoWtJgDYFMBcya6GOAHmAQOQBKOAZjgE5OzB2wCGsA6jgEYBnCGByUANEXQCArnxHkqAMQ4BrHLAAiHMB3GTYuOhViUAxjmgjGlIgF8J6MMGBZIIAqmIZGEAOa-mKmEcAFsbdHsiXADoABMPfWAfC2NKADcmSFMOLD0vQ1SC8NhIqSYIHAECAG19Ty9YaA4Q_BMAQVNzAQFYRUZgMIcGsABPEFbKEAq8hsYOWIhpKpMAVgAGAFIZr1jtDhr9LyRYNJzpVoBGNYAWAA4xRuaJgGUcDkZTAAtYAFFoXwg0FEJSGDWQJzOrQA7ABmFYPJotKgaCDMUxgSggw7EY6nLDnAgrW5rBFPKg_EIcCC5LFg9C4yEEO7XUlIkwAVTgbViAkxpTpDPxrRhaxJjzZlAAahBYjhgLBubyStiALqg4ihECfDhCZb1MHBELPUa4BJ04gCbWxYAAdwAQvjGAQruqwZb5raAPJ0OgCHBgAAaBBJ2K87utNoAwi4klRGL4-BwABRi1MPNYAOhWAEpimDbNiC14i7AVShbABuIA
+	⚠ 请注意，该图表不是 Apache ECharts 官方示例，而是由用户代码生成的。请注意鉴别其内容。
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./index.css" />
+</head>
+
+<body style="height: 100%; margin: 0">
+
+  <div class="panel">
+    <div id="container" style="height: 100%"></div>
+    <div class="panel-footer"></div>
+  </div>
+
+
+
+  <script type="text/javascript" src="./echarts/echarts.min.js"></script>
+  <!-- <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> -->
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/extension/bmap.min.js"></script>
+  -->
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+
+    var option;
+
+    option = {
+      title: {
+        text: '大城市积水点饼状图',
+        fontsize: "20",
+        left: 'center',
+        textStyle: {
+          fontSize: 40,
+          color: 'rgb(70,130,180)'
+        }
+      },
+      tooltip: {
+        trigger: 'item',
+        textStyle: {
+          fontSize: 20,
+          color: 'rgb(70,130,180)'
+        }
+      },
+      toolbox: {
+        show: true,
+        orient: 'vertical',
+        left: 'right',
+        top: 'center',
+        itemSize: 30,
+        emphasis: {
+          iconStyle: {
+            textStyle: {
+              fontSize: 30,
+              color: 'rgb(70,130,180)'
+            }
+          }
+        },
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          myTool1: {
+            show: true,
+            title: '切换为饼状图',
+            icon: 'path://M64 544C64 774.4 249.6 960 480 960c204.8 0 377.6-153.6 409.6-352H480c-38.4 0-64-25.6-64-64V134.4C217.6 166.4 64 339.2 64 544zM480 64v480H960c0 262.4-217.6 480-480 480S0 806.4 0 544 217.6 64 480 64z m160 6.4V384h313.6c-25.6-160-153.6-288-313.6-313.6zM576 0c249.6 0 448 198.4 448 448H576V0z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+            onclick: function () {
+              switchToPie()
+            }
+          },
+          myTool2: {
+            show: true,
+            title: '切换为玫瑰图',
+            icon: 'path://M512 256a256 256 0 1 0 256 256 256 256 0 0 0-256-256z m0 384a128 128 0 1 1 128-128 128 128 0 0 1-128 128z, M768 320l-153.6 115.84A128 128 0 0 1 640 512a128 128 0 0 1-37.44 90.56l135.68 135.68A320 320 0 0 0 768 320z, M602.56 602.56a128 128 0 0 1-181.12 0l-181.12 181.12a384 384 0 0 0 544 0z, M384 512a128 128 0 0 1 128-128V64a448 448 0 0 0-316.8 764.8l226.24-226.24A128 128 0 0 1 384 512z',
+            onclick: function () {
+              switchToRose()
+            }
+          },
+          myTool3: {
+            show: true,
+            title: '停止自动切换',
+            //icon: 'M8.2,38.4l-8.4,4.1l30.6,15.3L60,42.5l-8.1-4.1l-21.5,11L8.2,38.4z M51.9,30l-8.1,4.2l-13.4,6.9l-13.9-6.9L8.2,30l-8.4,4.2l8.4,4.2l22.2,11l21.5-11l8.1-4.2L51.9,30z M51.9,21.7l-8.1,4.2L35.7,30l-5.3,2.8L24.9,30l-8.4-4.1l-8.3-4.2l-8.4,4.2L8.2,30l8.3,4.2l13.9,6.9l13.4-6.9l8.1-4.2l8.1-4.1L51.9,21.7zM30.4,2.2L-0.2,17.5l8.4,4.1l8.3,4.2l8.4,4.2l5.5,2.7l5.3-2.7l8.1-4.2l8.1-4.2l8.1-4.1L30.4,2.2z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+            icon: 'path://M512 0C230.4 0 0 230.4 0 512c0 281.6 230.4 512 512 512 117.76 0 227.84-38.4 320-110.08 10.24-7.68 12.8-23.04 5.12-35.84-7.68-10.24-23.04-12.8-35.84-5.12C719.36 939.52 616.96 972.8 512 972.8 256 972.8 51.2 768 51.2 512 51.2 256 256 51.2 512 51.2 768 51.2 972.8 256 972.8 512c0 87.04-25.6 171.52-69.12 243.2-7.68 12.8-2.56 28.16 7.68 33.28 12.8 7.68 28.16 2.56 33.28-7.68 51.2-79.36 76.8-174.08 76.8-271.36C1024 230.4 793.6 0 512 0z,M686.08 307.2 337.92 307.2c-17.92 0-30.72 12.8-30.72 30.72l0 348.16c0 17.92 12.8 30.72 30.72 30.72l348.16 0c17.92 0 30.72-12.8 30.72-30.72L716.8 337.92C716.8 320 704 307.2 686.08 307.2zM665.6 657.92c0 5.12-2.56 7.68-7.68 7.68L366.08 665.6c-5.12 0-7.68-2.56-7.68-7.68L358.4 366.08c0-5.12 2.56-7.68 7.68-7.68l291.84 0c5.12 0 7.68 2.56 7.68 7.68L665.6 657.92z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+            onclick: function () {
+              stopSwitch()
+            }
+          },
+          myTool4: {
+            show: true,
+            title: '开始自动切换',
+            //icon: 'M8.2,38.4l-8.4,4.1l30.6,15.3L60,42.5l-8.1-4.1l-21.5,11L8.2,38.4z M51.9,30l-8.1,4.2l-13.4,6.9l-13.9-6.9L8.2,30l-8.4,4.2l8.4,4.2l22.2,11l21.5-11l8.1-4.2L51.9,30z M51.9,21.7l-8.1,4.2L35.7,30l-5.3,2.8L24.9,30l-8.4-4.1l-8.3-4.2l-8.4,4.2L8.2,30l8.3,4.2l13.9,6.9l13.4-6.9l8.1-4.2l8.1-4.1L51.9,21.7zM30.4,2.2L-0.2,17.5l8.4,4.1l8.3,4.2l8.4,4.2l5.5,2.7l5.3-2.7l8.1-4.2l8.1-4.2l8.1-4.1L30.4,2.2z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+            icon: 'path://M512 0C229.671385 0 0 229.671385 0 512s229.671385 512 512 512 512-229.671385 512-512S794.328615 0 512 0z m0 984.615385C251.411692 984.615385 39.384615 772.588308 39.384615 512S251.411692 39.384615 512 39.384615s472.615385 212.027077 472.615385 472.615385-212.027077 472.615385-472.615385 472.615385z,M630.153846 724.342154V304.009846L276.539077 508.179692 630.153846 724.342154z m-39.384615-70.222769l-237.154462-144.97477L590.769231 372.224v281.895385z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+            onclick: function () {
+              startSwitch()
+            }
+          },
+          restore: { show: false },
+          saveAsImage: { show: true },
+        }
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        textStyle: {
+          fontSize: 25,
+          color: 'rgb(70,130,180)'
+        }
+      },
+      series: [
+        {
+          name: '历史积水总次数',
+          type: 'pie',
+          radius: '65%',
+          itemStyle: {
+            borderRadius: 10
+          },
+          data: [],
+          "label": {
+            "normal": {
+              "show": true,
+              "textStyle": {
+                "fontSize": 22,
+                color: 'rgb(70,130,180)'
+              }
+            },
+            "emphasis": {
+              "show": true
+            }
+          },
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)',
+            }
+          }
+        }
+      ]
+    };
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    function updateData(message) {
+      // 抽取message  message格式
+      // {'北京': {'2019': 100, '2020': 30, '2021': 50, '2022': 20, '2023': 31, 'total': 170}, 
+      // '上海': {'2019': 40, '2020': 30, '2021': 50, '2022': 20, '2023': 30, 'total': 170}}
+      // 抽取后的格式 [{name:北京, value:170}, {name:上海, value:170}]
+      // console.log(message)
+      option["series"][0].data = [] // 清空
+      var data = []
+      for (var key in message) {
+        // console.log(key)
+        // console.log(message[key]['total'])
+        data.push({ name: key, value: message[key]['total'] })
+      }
+      option["series"][0].data = data;
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      return option["series"][0].data;
+    }
+
+    function switchToPie()
+    {
+      option["series"][0]['radius'] = '65%';
+      //option["series"][0]['center'] = '';
+      option["series"][0]['roseType'] = '';
+      myChart.setOption(option);
+    }
+
+    function switchToRose()
+    {
+      option["series"][0]['radius'] = [50, 250];
+      option["series"][0]['center'] = ['50%', '50%'];
+      option["series"][0]['roseType'] = 'area';
+      myChart.setOption(option);
+    }
+
+
+    let currentIndex = -1;
+    setInterval(function () {
+      var dataLen = option["series"][0].data.length;
+      // 取消之前高亮的图形
+      myChart.dispatchAction({
+        type: 'downplay',
+        seriesIndex: 0,
+        dataIndex: currentIndex
+      });
+      currentIndex = (currentIndex + 1) % dataLen;
+      // 高亮当前图形
+      myChart.dispatchAction({
+        type: 'highlight',
+        seriesIndex: 0,
+        dataIndex: currentIndex
+      });
+      // 显示 tooltip
+      myChart.dispatchAction({
+        type: 'showTip',
+        seriesIndex: 0,
+        dataIndex: currentIndex
+      });
+    }, 2500);
+
+
+    var index = 0;
+    function cycleSwitch(){
+      index = (index + 1) % 2;
+      switch(index){
+        case 0:
+          switchToPie();
+          break;
+        case 1: 
+          switchToRose();
+          break;
+        default:
+          break;
+      };
+    }
+
+    var timer = setInterval(cycleSwitch, 3000);
+
+    function startSwitch(){
+      clearInterval(timer);
+      timer = setInterval(cycleSwitch, 3000);
+    }
+
+    function stopSwitch(){
+      clearInterval(timer);
+    }
+
+
+    updateData({ '北京': { '2019': 100, '2020': 30, '2021': 50, '2022': 20, '2023': 31, 'total': 100, "position": "120.59,31.30" }, '上海': { '2019': 40, '2020': 30, '2021': 50, '2022': 20, '2023': 30, 'total': 170, "position": "120.59,31.30" } })
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+
+</html>

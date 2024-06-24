@@ -1,0 +1,366 @@
+<!--
+	此示例下载自 https://echarts.apache.org/examples/zh/editor.html?c=bar-label-rotation
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="./index.css" />
+</head>
+<body style="height: 100%; margin: 0">
+
+  <div class="panel">
+    <div id="container" style="height: 100%"></div>
+    <div class="panel-footer"></div>
+  </div>
+
+  <script type="text/javascript" src="./echarts/echarts.min.js"></script>
+  <!-- <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script> -->
+  <!-- Uncomment this line if you want to dataTool extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/extension/dataTool.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use gl extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to echarts-stat extension
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+  -->
+  <!-- Uncomment this line if you want to use map
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/china.js"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@4.9.0/map/js/world.js"></script>
+  -->
+  <!-- Uncomment these two lines if you want to use bmap extension
+  <script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOUR_API_KEY"></script>
+  <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/extension/bmap.min.js"></script>
+  -->
+
+  <script type="text/javascript">
+    var dom = document.getElementById('container');
+    var myChart = echarts.init(dom, null, {
+      renderer: 'canvas',
+      useDirtyRect: false
+    });
+    var app = {};
+    
+    var option;
+
+    const posList = [
+  'left',
+  'right',
+  'top',
+  'bottom',
+  'inside',
+  'insideTop',
+  'insideLeft',
+  'insideRight',
+  'insideBottom',
+  'insideTopLeft',
+  'insideTopRight',
+  'insideBottomLeft',
+  'insideBottomRight'
+];
+app.configParameters = {
+  rotate: {
+    min: -90,
+    max: 90
+  },
+  align: {
+    options: {
+      left: 'left',
+      center: 'center',
+      right: 'right'
+    }
+  },
+  verticalAlign: {
+    options: {
+      top: 'top',
+      middle: 'middle',
+      bottom: 'bottom'
+    }
+  },
+  position: {
+    options: posList.reduce(function (map, pos) {
+      map[pos] = pos;
+      return map;
+    }, {})
+  },
+  distance: {
+    min: 0,
+    max: 100
+  }
+};
+app.config = {
+  rotate: 90,
+  align: 'left',
+  verticalAlign: 'middle',
+  position: 'insideBottom',
+  distance: 15,
+  onChange: function () {
+    const labelOption = {
+      rotate: app.config.rotate,
+      align: app.config.align,
+      verticalAlign: app.config.verticalAlign,
+      position: app.config.position,
+      distance: app.config.distance
+    };
+    myChart.setOption({
+      series: [
+        {
+          label: labelOption
+        },
+        {
+          label: labelOption
+        },
+        {
+          label: labelOption
+        },
+        {
+          label: labelOption
+        }
+      ]
+    });
+  }
+};
+const labelOption = {
+  show: false,
+  position: app.config.position,
+  distance: app.config.distance,
+  align: app.config.align,
+  verticalAlign: app.config.verticalAlign,
+  rotate: app.config.rotate,
+  formatter: '{c}  {name|{a}}',
+  fontSize: 10,
+  rich: {
+    name: {}
+  }
+};
+option = {
+  tooltip: {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    },
+    textStyle: {
+      fontSize: 22,
+      color: 'rgb(70,130,180)'
+    }
+  },
+  legend: {
+    data: [],
+    textStyle: {
+      fontSize: 25,
+      color: 'rgb(70,130,180)'
+    }
+  },
+  toolbox: {
+    show: true,
+    orient: 'vertical',
+    left: 'right',
+    top: 'center',
+    itemSize: 30,
+    emphasis: {
+      iconStyle: {
+        textStyle: {
+          fontSize: 30,
+          color: 'rgb(70,130,180)'
+        }
+      }
+    },
+    feature: {
+      mark: { show: true },
+      dataView: { show: true, readOnly: false },
+      myTool1: {
+        show: true,
+        title: '切换为折线图',
+        icon: 'M4.1,28.9h7.1l9.3-22l7.4,38l9.7-19.7l3,12.8h14.9M4.1,58h51.4',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        onclick: function () {
+          myToolHandlerLine()
+        }
+      },
+      myTool2: {
+        show: true,
+        title: '切换为柱状图',
+        icon: 'M6.7,22.9h10V48h-10V22.9zM24.9,13h10v35h-10V13zM43.2,2h10v46h-10V2zM3.1,58h53.7',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        onclick: function () {
+          myToolHandlerBar()
+        }
+      },
+      myTool3: {
+        show: true,
+        title: '切换为堆叠',
+        icon: 'M8.2,38.4l-8.4,4.1l30.6,15.3L60,42.5l-8.1-4.1l-21.5,11L8.2,38.4z M51.9,30l-8.1,4.2l-13.4,6.9l-13.9-6.9L8.2,30l-8.4,4.2l8.4,4.2l22.2,11l21.5-11l8.1-4.2L51.9,30z M51.9,21.7l-8.1,4.2L35.7,30l-5.3,2.8L24.9,30l-8.4-4.1l-8.3-4.2l-8.4,4.2L8.2,30l8.3,4.2l13.9,6.9l13.4-6.9l8.1-4.2l8.1-4.1L51.9,21.7zM30.4,2.2L-0.2,17.5l8.4,4.1l8.3,4.2l8.4,4.2l5.5,2.7l5.3-2.7l8.1-4.2l8.1-4.2l8.1-4.1L30.4,2.2z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        onclick: function () {
+          myToolHandlerStack()
+        }
+      },
+      myTool4: {
+        show: true,
+        title: '停止自动切换',
+        //icon: 'M8.2,38.4l-8.4,4.1l30.6,15.3L60,42.5l-8.1-4.1l-21.5,11L8.2,38.4z M51.9,30l-8.1,4.2l-13.4,6.9l-13.9-6.9L8.2,30l-8.4,4.2l8.4,4.2l22.2,11l21.5-11l8.1-4.2L51.9,30z M51.9,21.7l-8.1,4.2L35.7,30l-5.3,2.8L24.9,30l-8.4-4.1l-8.3-4.2l-8.4,4.2L8.2,30l8.3,4.2l13.9,6.9l13.4-6.9l8.1-4.2l8.1-4.1L51.9,21.7zM30.4,2.2L-0.2,17.5l8.4,4.1l8.3,4.2l8.4,4.2l5.5,2.7l5.3-2.7l8.1-4.2l8.1-4.2l8.1-4.1L30.4,2.2z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        icon: 'path://M512 0C230.4 0 0 230.4 0 512c0 281.6 230.4 512 512 512 117.76 0 227.84-38.4 320-110.08 10.24-7.68 12.8-23.04 5.12-35.84-7.68-10.24-23.04-12.8-35.84-5.12C719.36 939.52 616.96 972.8 512 972.8 256 972.8 51.2 768 51.2 512 51.2 256 256 51.2 512 51.2 768 51.2 972.8 256 972.8 512c0 87.04-25.6 171.52-69.12 243.2-7.68 12.8-2.56 28.16 7.68 33.28 12.8 7.68 28.16 2.56 33.28-7.68 51.2-79.36 76.8-174.08 76.8-271.36C1024 230.4 793.6 0 512 0z,M686.08 307.2 337.92 307.2c-17.92 0-30.72 12.8-30.72 30.72l0 348.16c0 17.92 12.8 30.72 30.72 30.72l348.16 0c17.92 0 30.72-12.8 30.72-30.72L716.8 337.92C716.8 320 704 307.2 686.08 307.2zM665.6 657.92c0 5.12-2.56 7.68-7.68 7.68L366.08 665.6c-5.12 0-7.68-2.56-7.68-7.68L358.4 366.08c0-5.12 2.56-7.68 7.68-7.68l291.84 0c5.12 0 7.68 2.56 7.68 7.68L665.6 657.92z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        onclick: function () {
+          stopSwitch()
+        }
+      },
+      myTool5: {
+        show: true,
+        title: '开始自动切换',
+        //icon: 'M8.2,38.4l-8.4,4.1l30.6,15.3L60,42.5l-8.1-4.1l-21.5,11L8.2,38.4z M51.9,30l-8.1,4.2l-13.4,6.9l-13.9-6.9L8.2,30l-8.4,4.2l8.4,4.2l22.2,11l21.5-11l8.1-4.2L51.9,30z M51.9,21.7l-8.1,4.2L35.7,30l-5.3,2.8L24.9,30l-8.4-4.1l-8.3-4.2l-8.4,4.2L8.2,30l8.3,4.2l13.9,6.9l13.4-6.9l8.1-4.2l8.1-4.1L51.9,21.7zM30.4,2.2L-0.2,17.5l8.4,4.1l8.3,4.2l8.4,4.2l5.5,2.7l5.3-2.7l8.1-4.2l8.1-4.2l8.1-4.1L30.4,2.2z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        icon: 'path://M512 0C229.671385 0 0 229.671385 0 512s229.671385 512 512 512 512-229.671385 512-512S794.328615 0 512 0z m0 984.615385C251.411692 984.615385 39.384615 772.588308 39.384615 512S251.411692 39.384615 512 39.384615s472.615385 212.027077 472.615385 472.615385-212.027077 472.615385-472.615385 472.615385z,M630.153846 724.342154V304.009846L276.539077 508.179692 630.153846 724.342154z m-39.384615-70.222769l-237.154462-144.97477L590.769231 372.224v281.895385z',//可以复制阿里矢量图标的svg代码，path多个值用“，”隔开
+        onclick: function () {
+          startSwitch()
+        }
+      },
+      magicType: { show: false, type: ['line', 'bar', 'stack']},
+      restore: { show: false },
+      saveAsImage: { show: true },
+    }
+  },
+  xAxis: [
+    {
+      type: 'category',
+      axisTick: { show: false },
+      axisLabel: {
+        color: "rgb(70,130,180)",
+        fontSize: 40
+      },
+      // data: ['2019', '2020', '2021', '2022', '2023']
+      data: []
+    }
+  ],
+  yAxis: [
+    {
+      type: 'value',
+      axisLabel:{
+        color: "rgb(70,130,180)",
+        fontSize: 30
+      }
+    }
+  ],
+  series: []
+};
+
+    if (option && typeof option === 'object') {
+      myChart.setOption(option);
+    }
+
+    function updateData(data){
+      // 展示最近几年的数据
+      year_length = 5;
+      option['xAxis'][0]['data'] = [];
+
+      let date = new Date();
+      year = date.getFullYear();
+      //console.log(year);
+      for(var i = 1; i <= year_length; ++i)
+      {
+        // 2019 2020 2021 2022 2023
+        option['xAxis'][0]['data'].push(year - year_length + i);
+      }
+      //console.log(option['xAxis'][0]['data'])
+
+      option["series"] = []  // 清空列表
+      option["legend"]["data"] = []
+      
+      for(var key in data)
+      {
+        var tmp = {
+          name: '',
+          type: 'bar',
+          barGap: 0,
+          label: labelOption,
+          emphasis: {
+            focus: 'series'
+          },
+          data: []
+        };
+       
+        tmp["name"] = key;
+        var tmp_dict = data[key];
+        //console.log(key, tmp_dict)
+
+        for(var y = 0; y < year_length; ++y)
+        {
+          tmp_year = option['xAxis'][0]['data'][y]
+          //console.log(tmp_year)
+          if (tmp_dict.hasOwnProperty(tmp_year))
+            tmp["data"].push(tmp_dict[tmp_year])
+          else
+            tmp["data"].push(0)
+        }
+        //console.log(tmp["data"])
+        // tmp["name"] = data[i]["name"];
+        // tmp["data"] = data[i]["data"];
+
+        // option["legend"]["data"].push(data[i]["name"]);
+        option["legend"]["data"].push(key);
+        option["series"].push(tmp);
+      }
+
+      if (option && typeof option === 'object') {
+        myChart.setOption(option);
+      }
+      return "updateData";
+    }
+
+    updateData({'北京': {'2019': 100, '2020': 30, '2021': 50, '2022': 20, '2023': 31, 'total': 170}, '上海': {'2019': 40, '2020': 30, '2021': 50, '2022': 20, '2023': 30, 'total': 170}})
+
+   
+    var index = 0;
+    function cycleSwitch(){
+      index = (index + 1) % 3;
+      switch(index){
+        case 0:
+          myToolHandlerLine();
+          break;
+        case 1: 
+          myToolHandlerBar();
+          break;
+        case 2:
+          myToolHandlerStack();
+          break;
+      };
+    }
+
+    var timer = setInterval(cycleSwitch, 3000);
+
+    function myToolHandlerLine()
+    {
+      for(var i = 0; i < option["series"].length; ++i){
+        option["series"][i]['type'] = 'line';
+        option["series"][i]['stack'] = '';
+      }
+      myChart.setOption(option);
+    }
+
+    function myToolHandlerBar()
+    {
+      for(var i = 0; i < option["series"].length; ++i){
+        option["series"][i]['type'] = 'bar';
+        option["series"][i]['stack'] = '';
+      }
+      myChart.setOption(option);
+    }
+
+    function myToolHandlerStack()
+    {
+      for(var i = 0; i < option["series"].length; ++i){
+        option["series"][i]['type'] = 'bar';
+        option["series"][i]['stack'] = 'total';
+      }
+      myChart.setOption(option);
+    }
+    
+    function startSwitch(){
+      clearInterval(timer);
+      timer = setInterval(cycleSwitch, 3000);
+    }
+
+    function stopSwitch(){
+      clearInterval(timer);
+    }
+
+    window.addEventListener('resize', myChart.resize);
+  </script>
+</body>
+</html>

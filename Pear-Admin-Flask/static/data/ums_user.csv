@@ -1,0 +1,2 @@
+id,nickname,username,password,mobile,email,avatar,department_id,role_ids
+1,admin,admin,123456,123456,test@qq.com,,1,1

@@ -1,3 +1,9 @@
+# 忽略model_best
+*/model_best/
+
+# 忽略mp4文件
+*.mp4
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

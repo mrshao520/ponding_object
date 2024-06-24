@@ -1,0 +1,49 @@
+{
+    "采集渠道": [
+        "抖音",
+        "搜狐",
+        "微博",
+        "腾讯",
+        "百度",
+        "头条"
+    ],
+    "城市": {
+        "超大型城市": [
+            "北京",
+            "上海",
+            "深圳",
+            "广州",
+            "杭州"
+        ],
+        "大型城市": [
+            "成都",
+            "天津",
+            "合肥",
+            "东莞",
+            "武汉",
+            "西安",
+            "重庆",
+            "郑州",
+            "南京",
+            "济南"
+        ]
+    },
+    "server": {
+        "address": "http://127.0.0.1",
+        "port": "5000",
+        "predict": "/predict",
+        "login": "/login",
+        "query": "/query",
+        "delete": "/delete",
+        "query_summary": "/query_summary"
+    },
+    "WindowStaysOnTopHint" : false,
+    "headless" : true,
+    "depth_threhold" : 10,
+    "message":{
+        "message":10,
+        "success":10,
+        "error":60,
+        "warning":60
+    }
+}

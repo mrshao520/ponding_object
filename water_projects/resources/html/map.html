@@ -1,0 +1,357 @@
+<!--
+	此示例下载自 https://echarts.apache.org/examples/zh/editor.html?c=bar-label-rotation
+-->
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="./index_map.css" />
+</head>
+
+<body style="height: 100%; margin: 0">
+
+    <section class="mainbox" style="height: 100;">
+        <div class="column">
+            <div class="map">
+                <div class="map1"></div>
+                <div class="map2"></div>
+                <div class="map3"></div>
+                <div class="chart" id="container"></div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <script src="./message.js"></script>
+    <script type="text/javascript" src="./echarts/echarts.min.js"></script>
+    <script type="text/javascript" src="./echarts/china.js"></script>
+    <script type="text/javascript">
+        var dom = document.getElementById('container');
+        var myChart = echarts.init(dom, null, {
+            renderer: 'canvas',
+            useDirtyRect: false
+        });
+
+        let option = {
+            tooltip: {
+                show: false
+            },
+            geo: {
+                map: "china",
+                roam: false,// 一定要关闭拖拽
+                zoom: 1.23,
+                center: [105, 36], // 调整地图位置
+                label: {
+                    normal: {
+                        show: false, //关闭省份名展示
+                        fontSize: "10",
+                    },
+                    emphasis: {
+                        show: false
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        areaColor: "rgba(43, 196, 243, 0.42)",
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                        borderColor: "rgba(43, 196, 243, 1)",
+                        shadowColor: 'rgba(0, 0, 0, 0.5)',
+                        borderWidth: 1
+                    },
+                    emphasis: {
+                        areaColor: "#2B91B7",
+                        shadowOffsetX: 0,
+                        shadowOffsetY: 0,
+                        shadowBlur: 5,
+                        borderWidth: 0,
+                        shadowColor: "rgba(0, 0, 0, 0.5)"
+                    }
+                }
+            },
+            series: [
+                {
+                    type: "map",
+                    map: "china",
+                    roam: false,
+                    zoom: 1.23,
+                    center: [105, 36],
+                    // geoIndex: 1,
+                    // aspectScale: 0.75, //长宽比
+                    showLegendSymbol: false, // 存在legend时显示
+                    label: {
+                        normal: {
+                            show: false
+                        },
+                        emphasis: {
+                            show: false,
+                            textStyle: {
+                                color: "#fff"
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            areaColor: "rgba(43, 196, 243, 0.42)",
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 0,
+                            borderColor: "rgba(43, 196, 243, 1)",
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                            borderWidth: 1
+                        },
+                        emphasis: {
+                            areaColor: "#2B91B7",
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 0,
+                            shadowBlur: 5,
+                            borderWidth: 0,
+                            shadowColor: "rgba(0, 0, 0, 0.5)"
+                        }
+                    }
+                }
+            ]
+        };
+        myChart.setOption(option);
+
+        var option_data = {
+            series: [
+                {
+                    type: "map",
+                    map: "china",
+                    roam: false,
+                    zoom: 1.23,
+                    center: [105, 36],
+                    // geoIndex: 1,
+                    // aspectScale: 0.75, //长宽比
+                    showLegendSymbol: false, // 存在legend时显示
+                    label: {
+                        normal: {
+                            show: false
+                        },
+                        textStyle: {
+                            fontSize: 15
+                        },
+                        emphasis: {
+                            show: false
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            areaColor: "rgba(43, 196, 243, 0.42)",
+                            shadowOffsetX: 0,
+                            shadowOffsetY: 0,
+                            borderColor: "rgba(43, 196, 243, 1)",
+                            shadowColor: 'rgba(0, 0, 0, 0.5)',
+                            borderWidth: 1
+                        },
+                        emphasis: {
+                            areaColor: "#2B91B7"
+                        }
+                    }
+                },
+                {
+                    // 普通显示
+                    name: "normal",
+                    type: "scatter",
+                    coordinateSystem: "geo",
+                    // data: city_data,
+                    data: [],
+                    symbol: "circle",
+                    symbolSize: 8,
+                    hoverSymbolSize: 10,
+                    tooltip: {
+                        formatter(value) {
+                            return value.data.name + "<br/>" + "历史积水点个数:" + value.data.volume;
+                        },
+                        show: true,
+                        textStyle: {
+                            fontSize: 20,
+                            color: 'rgb(70,130,180)'
+                        }
+                    },
+                    encode: {
+                        value: 2
+                    },
+                    label: {
+                        formatter: "{b}",
+                        position: "right",
+                        show: false,
+                        textStyle: {
+                            fontSize: 15,
+                        },
+                    },
+                    itemStyle: {
+                        color: "#0d0059"
+                    },
+                    emphasis: {
+                        label: {
+                            show: false
+                        }
+                    }
+                },
+                {
+                    // 显示top 5
+                    name: "Top 5",
+                    type: "effectScatter",
+                    coordinateSystem: "geo",
+                    // data: max_city_data,
+                    data: [],
+                    symbolSize: 15,
+                    tooltip: {
+                        formatter(value) {
+                            return value.data.name + "<br/>" + "历史积水点个数:" + value.data.volume;
+                        },
+                        show: true,
+                        textStyle: {
+                            fontSize: 20,
+                            color: 'rgb(70,130,180)'
+                          }
+                    },
+                    encode: {
+                        value: 2
+                    },
+                    showEffectOn: "render",
+                    rippleEffect: {
+                        brushType: "stroke",
+                        color: "#0d0059",
+                        period: 9,
+                        scale: 5
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        formatter: "{b}",
+                        position: "right",
+                        show: true,
+                        textStyle: {
+                            fontSize: 20,
+                        },
+                    },
+                    itemStyle: {
+                        color: "#0d0059",
+                        shadowBlur: 2,
+                        shadowColor: "#333"
+                    },
+                    zlevel: 1
+                },
+                {
+                    // 显示正在发生
+                    name: "over_threshold",
+                    type: "effectScatter",
+                    coordinateSystem: "geo",
+                    // data: max_city_data,
+                    data: [],
+                    symbolSize: 15,
+                    tooltip: {
+                        formatter(value) {
+                            return value.data.name + "<br/>" + "积水深度值超出阈值<br/>" +
+                                "目前深度值为:" + value.data.volume + " cm";
+                        },
+                        show: true,
+                        textStyle: {
+                            fontSize: 20,
+                            color: 'rgb(255,0,0)'
+                          }
+                    },
+                    encode: {
+                        value: 2
+                    },
+                    showEffectOn: "render",
+                    rippleEffect: {
+                        brushType: "stroke",
+                        color: "red",
+                        period: 9,
+                        scale: 5,
+                        textStyle: {
+                            fontSize: 25,
+                        },
+                    },
+                    hoverAnimation: true,
+                    label: {
+                        formatter: "{b}",
+                        position: "right",
+                        show: true,
+                        textStyle: {
+                            fontSize: 20,
+                        },
+                    },
+                    itemStyle: {
+                        color: "red",
+                        shadowBlur: 2,
+                        shadowColor: "#333"
+                    },
+                    zlevel: 1
+                }
+            ]
+        };
+
+        if (option && typeof option === 'object') {
+            myChart.setOption(option_data);
+        }
+
+        function updateData(data) {
+            var city_data = [];
+            for (var key in data) {
+                console.log(key, data[key]['position'], data[key]['total'])
+                // console.log(message[key]['total'])
+                // key 城市名   value 经纬度   volume 历史积水点个数
+
+                city_data.push({ name: key, value: data[key]['position'], volume: data[key]['total'] })
+            }
+
+            city_data.sort(function (left, right) {
+                return right.volume - left.volume;
+            });
+
+            console.log(city_data)
+
+            option_data.series[2].data = []
+            option_data.series[1].data = []
+            option_data.series[2].data = city_data.splice(0, 5);
+            option_data.series[1].data = city_data;
+            myChart.setOption(option_data);
+            return "updateData";
+        }
+
+        function clearOverThresholdData() {
+            option_data.series[3].data = [];
+            myChart.setOption(option_data);
+            return "updateData";
+        }
+
+        function setOverThresholdData(data) {
+            option_data.series[3].data = [];
+            var city_data = [];
+            for (var key in data) {
+                console.log(key, data[key]['position'], data[key]['depth'])
+                // console.log(message[key]['total'])
+                // key 城市名   value 经纬度   volume 历史积水点个数
+
+                city_data.push({ name: key, value: data[key]['position'], volume: data[key]['depth'] })
+            }
+
+            option_data.series[3].data = city_data;
+
+            myChart.setOption(option_data);
+            return "updateData";
+        }
+
+
+        //updateData();
+        //updateData({ '北京': { '2019': 100, '2020': 30, '2021': 50, '2022': 20, '2023': 31, 'total': 80, "position": [120.59, 31.30] }, '上海': { '2019': 40, '2020': 30, '2021': 50, '2022': 20, '2023': 30, 'total': 170, "position": [117.23, 31.82] } })
+        //setOverThresholdData({ '北京': { 'depth': 80, "position": [120.59, 31.30] }, '上海': { 'depth': 170, "position": [117.23, 31.82] } })
+        // clearWaterData();
+
+        messageControl = new messageControl();
+        function message(info) {
+            messageControl.message(info);
+        }
+
+        // message({'content':'11\n1', 'type':'success'});
+
+        window.addEventListener('resize', myChart.resize);
+    </script>
+</body>
+
+</html>
