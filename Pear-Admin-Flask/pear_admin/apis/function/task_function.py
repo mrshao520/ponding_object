@@ -23,6 +23,18 @@ def task_function(
     task_start_datetime: datetime,
     task_end_datetime: datetime,
 ):
+    """爬虫任务
+
+    Args:
+        id (str): 任务id
+        channels (str): 检索通道
+        city (str): 城市 格式："北京:上海:天津"
+        interval (str): 爬取间隔时间
+        start_datetime (datetime): 爬取到信息的时间范围
+        end_datetime (datetime):
+        task_start_datetime (datetime): 任务开始时间
+        task_end_datetime (datetime): 任务结束时间
+    """
     now = datetime.now()
     logger.info(f"当前时间: {now} --- 任务id: {id}")
     logger.info(f"任务开始结束时间: {task_start_datetime} --- {task_end_datetime}")
@@ -199,10 +211,10 @@ def task_function(
                 pass
         channel_info.total_effective_number += effective_number
         logger.info(f"爬取有效信息个数/总有效信息个数: {effective_number}/{channel_info.total_effective_number}")
-        # 保存 渠道 信息
-        with scheduler.app.app_context():
-            channel_info.save()
-        return True
+    # 保存 渠道 信息
+    with scheduler.app.app_context():
+        channel_info.save()
+    return True
 
 
 def format_value(depth: str):

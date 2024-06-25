@@ -99,7 +99,7 @@ class ChannelsORM(BaseORM):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, comment="自增id")
     channel = db.Column(db.String(64), unique=True, nullable=False, comment="检索渠道")
-    command = db.Column(db.String(256), nullable=False, comment="命令")
+    command = db.Column(db.Text, nullable=False, comment="命令")
     effective_number = db.Column(
         db.Integer, nullable=False, comment="今日有效总数", default=0
     )

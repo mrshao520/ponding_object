@@ -69,6 +69,8 @@ def extract():
             content = data['content']
             logger.info(f'城市 : {city}')
             logger.info(f'待模型提取的文本 : {content}')
+            city = city.split(":")
+            logger.info(f'城市列表 : {city}')
             # 模型提取后并过滤的文本
             uie = UIE_Model2()
             results = uie.predict(city, content) 
@@ -183,4 +185,4 @@ if __name__ == "__main__":
     logger.info('----------大城市暴雨积水多源数据实时采集处理系统----------')
     
     JsonParser.prepare()
-    app.run(host='0.0.0.0', port=8886)
+    app.run(host='0.0.0.0', port=8886, debug=True)

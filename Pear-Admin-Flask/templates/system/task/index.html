@@ -34,21 +34,21 @@
       <div class="layui-form-item">
         <label class="layui-form-label">城市</label>
         <div class="layui-input-block">
-          <input type="radio" name="cities" value="北京" title="北京" lay-verify="otherReq" />
-          <input type="radio" name="cities" value="上海" title="上海" />
-          <input type="radio" name="cities" value="深圳" title="深圳" />
-          <input type="radio" name="cities" value="广州" title="广州" />
-          <input type="radio" name="cities" value="杭州" title="杭州" />
-          <input type="radio" name="cities" value="成都" title="成都" />
-          <input type="radio" name="cities" value="天津" title="天津" />
-          <input type="radio" name="cities" value="合肥" title="合肥" />
-          <input type="radio" name="cities" value="东莞" title="东莞" />
-          <input type="radio" name="cities" value="武汉" title="武汉" />
-          <input type="radio" name="cities" value="西安" title="西安" />
-          <input type="radio" name="cities" value="重庆" title="重庆" />
-          <input type="radio" name="cities" value="郑州" title="郑州" />
-          <input type="radio" name="cities" value="南京" title="南京" />
-          <input type="radio" name="cities" value="济南" title="济南" />
+          <input type="checkbox" name="北京" title="北京" />
+          <input type="checkbox" name="上海" title="上海" />
+          <input type="checkbox" name="深圳" title="深圳" />
+          <input type="checkbox" name="广州" title="广州" />
+          <input type="checkbox" name="杭州" title="杭州" />
+          <input type="checkbox" name="成都" title="成都" />
+          <input type="checkbox" name="天津" title="天津" />
+          <input type="checkbox" name="合肥" title="合肥" />
+          <input type="checkbox" name="东莞" title="东莞" />
+          <input type="checkbox" name="武汉" title="武汉" />
+          <input type="checkbox" name="西安" title="西安" />
+          <input type="checkbox" name="重庆" title="重庆" />
+          <input type="checkbox" name="郑州" title="郑州" />
+          <input type="checkbox" name="南京" title="南京" />
+          <input type="checkbox" name="济南" title="济南" />
         </div>
       </div>
       <div class="layui-form-item">
@@ -106,7 +106,7 @@
       <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">备注</label>
         <div class="layui-input-block">
-          <textarea placeholder="请输入内容" name="description" lay-verify="word_num" class="layui-textarea"></textarea>
+          <textarea placeholder="请输入内容" name="description" class="layui-textarea"></textarea>
         </div>
       </div>
 
@@ -262,11 +262,11 @@
           if (obj.event === 'task-tool-edit') {
             // 编辑
             // console.log(obj.data)
-            //var cities = obj.data.cities.split(':')
-            //cities.forEach(function (city) {
-            //  obj.data[city] = 'on'
-            //})
-            console.log(obj.data)
+            var cities = obj.data.cities.split(':')
+            cities.forEach(function (city) {
+              obj.data[city] = 'on'
+            })
+            // console.log(obj.data)
             form.val('task-form', obj.data) // 将数据填充到表格中
             layer.open({
               type: 1,
@@ -390,7 +390,24 @@
         form.on('submit(task-form-add)', function (data) {
           var field = data.field
           let method, url
-      
+
+          //field["cities"] = ""
+          // console.log(field)
+          //for (let key in field) {
+          //  if (field[key] === 'on') {
+          //      field["cities"] = field["cities"] + ":" + key
+          //      delete field[key]
+          //  }
+          //}
+          field["cities"] = Object.keys(field)
+            .filter(key => field[key] === 'on')
+            .join(':'); // 使用冒号连接城市名称
+
+          Object.keys(field)
+            .filter(key => field[key] === 'on')
+            .forEach(key => delete field[key]); // 删除 'on' 前缀的属性
+
+          console.log(field)
           // console.log(field)
           if (field.id == 0) {
             // 增加

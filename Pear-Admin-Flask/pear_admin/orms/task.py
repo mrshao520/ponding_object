@@ -13,7 +13,7 @@ class TaskORM(BaseORM):
     end_datetime = db.Column(db.DateTime, nullable=True, comment="结束时间")
     task_start_datetime = db.Column(db.DateTime, nullable=False, comment="任务开始时间")
     task_end_datetime = db.Column(db.DateTime, nullable=False, comment="任务开始时间")
-    description = db.Column(db.String(256), nullable=True, comment="任务描述")
+    description = db.Column(db.Text, nullable=True, comment="任务描述")
 
     def json(self):
         return {

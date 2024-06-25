@@ -38,11 +38,11 @@ class UIE_Model:
 
         return runtime_option
 
-    def predict(self, city, texts):
+    def predict(self, city: list, texts: list):
         results = self.uie.predict(texts, return_dict=True)
         return self.handle_results(city, results)
 
-    def handle_results(self, cityName: str, results: list) -> list:
+    def handle_results(self, cityName: list, results: list) -> list:
 
         logger.info(f"抽取后的结果 : {results}")
 
@@ -54,17 +54,28 @@ class UIE_Model:
                 logger.debug(f"未抽取到地点的结果 : {res}")
                 continue
             city = self.get_valid_data(res.get("城市", []))
+            # logger.info(f"city : {city}")
             if not city:
                 # 未抽取到城市
                 logger.debug(f"未抽取到城市的结果 : {res}")
                 continue
-            if cityName not in city:
+            # if cityName not in city:
+            #     # 城市不匹配
+            #     logger.debug(f"城市 {cityName} - {city} 不匹配的结果 :  {res}")
+            #     continue
+            # 统一城市名 例如 江苏省南京市 统一为 南京
+            # city = cityName
+            match_city_name = False
+            for city_name in cityName:
+                if city_name in city:
+                    # 统一城市名 例如 江苏省南京市 统一为 南京
+                    city = city_name
+                    match_city_name = True
+                    break
+            if not match_city_name:
                 # 城市不匹配
                 logger.debug(f"城市 {cityName} - {city} 不匹配的结果 :  {res}")
                 continue
-
-            # 统一城市名 例如 江苏省南京市 统一为 南京
-            city = cityName
 
             date = self.get_valid_data(res.get("日期", ""))
             time = self.get_valid_data(res.get("时间", ""))
@@ -90,8 +101,8 @@ class UIE_Model:
                 pos["date"] = date
                 pos["time"] = time
                 pos["city"] = city
-                address = city + pos["position"]
-                logger.info(f"address : {address}")
+                # address = city + pos["position"]
+                # logger.info(f"address : {address}")
                 # position = city + position
                 # 已废弃
                 # pos['经纬度'] = get_location(city=city, address=address)

@@ -15,5 +15,6 @@ def register_extensions(app: Flask):
 
     register_script(app)
     # 初始化 scheduler
+    # __scheduler_init(app)
     scheduler.init_app(app)
     scheduler.start()

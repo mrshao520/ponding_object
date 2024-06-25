@@ -2,7 +2,7 @@
 <html lang="zh-cn">
   <head>
     <meta charset="utf-8" />
-    <title>检索渠道管理</title>
+    <title>数据管理</title>
     <meta name="renderer" content="webkit" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -12,13 +12,13 @@
     <div style="padding: 16px">
       <div class="layui-card">
         <div class="layui-card-body">
-          <table class="layui-hide" id="channel-table" lay-filter="channel-table"></table>
+          <table class="layui-hide" id="task-table" lay-filter="task-table"></table>
         </div>
       </div>
     </div>
 
     <!-- ############### 弹出的表单窗口 ################ -->
-    <form class="layui-form" lay-filter="channel-form" id="channel-form" action="" style="padding: 15px; display: none">
+    <form class="layui-form" lay-filter="task-form" id="task-form" action="" style="padding: 15px; display: none">
       <div class="layui-form-item">
         <label class="layui-form-label">ID</label>
         <div class="layui-input-block">
@@ -26,78 +26,117 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">检索名称</label>
+        <label class="layui-form-label">任务名</label>
         <div class="layui-input-block">
-          <input type="text" name="channel" placeholder="请输入检索渠道名称" lay-verify="required|word_num" autocomplete="off" class="layui-input" />
+          <input type="text" name="name" placeholder="请输入输入任务名" lay-verify="required|word_num" autocomplete="off" class="layui-input" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">命令</label>
+        <label class="layui-form-label">城市</label>
         <div class="layui-input-block">
-          <input type="text" name="command" placeholder="请输入输入命令，city表示城市，start_datetime表示开始时间，end_datetime表示结束时间" lay-verify="required" autocomplete="off" class="layui-input" />
+          <input type="radio" name="cities" value="北京" title="北京" lay-verify="otherReq" />
+          <input type="radio" name="cities" value="上海" title="上海" />
+          <input type="radio" name="cities" value="深圳" title="深圳" />
+          <input type="radio" name="cities" value="广州" title="广州" />
+          <input type="radio" name="cities" value="杭州" title="杭州" />
+          <input type="radio" name="cities" value="成都" title="成都" />
+          <input type="radio" name="cities" value="天津" title="天津" />
+          <input type="radio" name="cities" value="合肥" title="合肥" />
+          <input type="radio" name="cities" value="东莞" title="东莞" />
+          <input type="radio" name="cities" value="武汉" title="武汉" />
+          <input type="radio" name="cities" value="西安" title="西安" />
+          <input type="radio" name="cities" value="重庆" title="重庆" />
+          <input type="radio" name="cities" value="郑州" title="郑州" />
+          <input type="radio" name="cities" value="南京" title="南京" />
+          <input type="radio" name="cities" value="济南" title="济南" />
         </div>
       </div>
       <div class="layui-form-item">
+        <label class="layui-form-label">检索渠道</label>
         <div class="layui-input-block">
-          <button type="submit" class="layui-btn" lay-submit lay-filter="channel-form-add">立即提交</button>
-          <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          <input type="radio" name="channels" value="抖音" title="抖音" lay-verify="otherReq" />
+          <input type="radio" name="channels" value="搜狐" title="搜狐" />
+          <input type="radio" name="channels" value="微博" title="微博" />
+          <input type="radio" name="channels" value="腾讯" title="腾讯" />
+          <input type="radio" name="channels" value="百度" title="百度" />
+          <input type="radio" name="channels" value="头条" title="头条" />
         </div>
       </div>
-    </form>
+      <div class="layui-form-item">
+        <div class="layui-inline">
+          <label class="layui-form-label">时间间隔</label>
+          <div class="layui-input-inline">
+            <input type="text" name="interval" lay-verify="required" class="layui-input" id="task-form-interval" placeholder="HH:mm:ss" />
+          </div>
+        </div>
+      </div>
 
-    <!-- ############### 弹出的表单窗口 ################ -->
-    <form class="layui-form" lay-filter="channel-edit-form" id="channel-edit-form" action="" style="padding: 15px; display: none">
+
       <div class="layui-form-item">
-        <label class="layui-form-label">ID</label>
-        <div class="layui-input-block">
-          <input type="text" name="id" value="0" lay-verify="required" autocomplete="off" class="layui-input" disabled />
+        <div class="layui-inline">
+          <label class="layui-form-label">开始时间</label>
+          <div class="layui-input-inline">
+            <input type="text" name="start_datetime"  class="layui-input" id="task-form-start-datetime" placeholder="yyyy-MM-dd HH:mm:ss" />
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">结束时间</label>
+          <div class="layui-input-inline">
+            <input type="text" name="end_datetime" class="layui-input" id="task-form-end-datetime" placeholder="yyyy-MM-dd HH:mm:ss" />
+          </div>
         </div>
       </div>
+
       <div class="layui-form-item">
-        <label class="layui-form-label">检索名称</label>
-        <div class="layui-input-block">
-          <input type="text" name="channel" placeholder="请输入输入检索渠道名称" lay-verify="required|word_num" autocomplete="off" class="layui-input" />
+        <div class="layui-inline">
+          <label class="layui-form-label">任务开始时间</label>
+          <div class="layui-input-inline">
+            <input type="text" name="task_start_datetime" lay-verify="required" class="layui-input" id="task-form-task-start-datetime" placeholder="yyyy-MM-dd HH:mm:ss" />
+          </div>
+        </div>
+        <div class="layui-inline">
+          <label class="layui-form-label">任务结束时间</label>
+          <div class="layui-input-inline">
+            <input type="text" name="task_end_datetime" lay-verify="required" class="layui-input" id="task-form-task-end-datetime" placeholder="yyyy-MM-dd HH:mm:ss" />
+          </div>
         </div>
       </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">命令</label>
+
+
+      <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">备注</label>
         <div class="layui-input-block">
-          <input type="text" name="command" placeholder="请输入输入命令，city表示城市，start_datetime表示开始时间，end_datetime表示结束时间" lay-verify="required" autocomplete="off" class="layui-input" />
+          <textarea placeholder="请输入内容" name="description" lay-verify="word_num" class="layui-textarea"></textarea>
         </div>
       </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">错误信息</label>
-        <div class="layui-input-block">
-          <textarea placeholder="错误信息和异常" name="information" class="layui-textarea"></textarea>
-        </div>
-      </div>
+
       <div class="layui-form-item">
         <div class="layui-input-block">
-          <button type="submit" class="layui-btn" lay-submit lay-filter="channel-edit-form-add">立即提交</button>
+          <button type="submit" class="layui-btn" lay-submit lay-filter="task-form-add">立即提交</button>
           <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
       </div>
     </form>
 
     <!-- ############### 表工具栏右侧 ################ -->
-    <script type="text/html" id="channel-toolbar">
+    <script type="text/html" id="task-toolbar">
       <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="channel-toolbar-add">
-          新增检索渠道
+        <button class="layui-btn layui-btn-sm" lay-event="task-toolbar-add">
+          新增任务
         </button>
       </div>
     </script>
 
     <!-- ############### 每行的操作按钮 ################ -->
-    <script type="text/html" id="channel-tool">
+    <script type="text/html" id="task-tool">
       <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm  layui-bg-blue" lay-event="channel-tool-edit">
+        <button class="layui-btn layui-btn-sm  layui-bg-blue" lay-event="task-tool-edit">
           编辑
         </button>
-        <button class="layui-btn layui-btn-sm layui-bg-red" lay-event="channel-tool-del">
+        <button class="layui-btn layui-btn-sm layui-bg-red" lay-event="task-tool-del">
           删除
         </button>
-        <a class="layui-btn layui-btn-sm" lay-event="channel-tool-more">
+        <a class="layui-btn layui-btn-sm" lay-event="task-tool-more">
           更多
           <i class="layui-icon layui-icon-down"></i>
         </a>
@@ -115,11 +154,11 @@
       
         // 创建渲染实例
         table.render({
-          elem: '#channel-table',
-          id: 'channel-table',
-          url: '/api/v1/function/channel', // 此处为静态模拟数据，实际使用时需换成真实接口
+          elem: '#task-table',
+          id: 'task-table',
+          url: '/api/v1/function/task', // 此处为静态模拟数据，实际使用时需换成真实接口
           height: 'full-35', // 最大高度减去其他容器已占有的高度差
-          toolbar: '#channel-toolbar',
+          toolbar: '#task-toolbar',
           page: true,
           // 表格工具栏右侧按钮
           defaultToolbar: [
@@ -140,37 +179,40 @@
                 { type: 'checkbox', fixed: 'left' },
                 //标题栏
                 { field: 'id', title: 'ID', fixed: 'left', minWidth: 60, expandedWidth: 60, sort: true },
-                { field: 'channel', title: '检索渠道', minWidth: 140, expandedWidth: 100, sort: true },
-                { field: 'command', title: '命令', minWidth: 350, expandedWidth: 100 },
-                { field: 'effective_number', title: '今日检索有效数', minWidth: 100, expandedWidth: 100, sort: true ,hide: true},
-                { field: 'number', title: '今日检索总数', minWidth: 100, expandedWidth: 100 ,hide: true},
-                { field: 'total_effective_number', title: '检索有效总数', minWidth: 100, expandedWidth: 100, sort: true,hide: true },
-                { field: 'total_number', title: '检索总数', minWidth: 100, expandedWidth: 100, sort: true ,hide: true},
+                { field: 'name', title: '任务名', minWidth: 100, expandedWidth: 100, sort: true },
+                { field: 'cities', title: '城市', minWidth: 100, expandedWidth: 100, sort: true },
+                { field: 'channels', title: '检索渠道', minWidth: 100, expandedWidth: 100, sort: true },
+                { field: 'interval', title: '时间间隔', minWidth: 140, expandedWidth: 140 },
+                { field: 'start_datetime', title: '开始时间', minWidth: 200, expandedWidth: 200, sort: true },
+                { field: 'end_datetime', title: '结束时间', minWidth: 200, expandedWidth: 200, sort: true },
+                { field: 'task_start_datetime', title: '任务开始时间', minWidth: 200, expandedWidth: 200, sort: true },
+                { field: 'task_end_datetime', title: '任务结束时间', minWidth: 200, expandedWidth: 200, sort: true },
                 {
-                  field: 'status',
                   title: '状态',
-                  minWidth: 60,
-                  expandedWidth: 60,
+                  minWidth: 100,
+                  expandedWidth: 100,
                   sort: true,
                   templet: function (d) {
-                    if (d.status) {
-                      return '<button type="button" class="layui-btn layui-btn-sm layui-btn-radius">正常</button>'
+                    var end = new Date(d.task_end_datetime.replace(/-/g, '/'))
+                    var now = new Date()
+                    if (end > now) {
+                      return '<button type="button" class="layui-btn layui-btn-sm layui-btn-radius">未过期</button>'
                     } else {
-                      return '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">异常</button>'
+                      return '<button type="button" class="layui-btn layui-btn-sm layui-btn-danger layui-btn-radius">已过期</button>'
                     }
                   }
                 },
-                { field: 'information', title: '错误信息和异常', minWidth: 200, expandedWidth: 200 },
+                { field: 'description', title: '任务描述', minWidth: 180, expandedWidth: 180 },
                 {
                   fixed: 'right',
                   title: '操作',
                   width: 200,
                   align: 'center',
-                  toolbar: '#channel-tool' // 设置每行的工具按钮
+                  toolbar: '#task-tool' // 设置每行的工具按钮
                 }
               ]
               // 初始化筛选状态
-              var local = layui.data('channel-filter-local') // 获取对应的本地记录
+              var local = layui.data('task-filter-local') // 获取对应的本地记录
               // console.log(local) // {description: true, time: true, position: true}
               layui.each(arr, function (index, item) {
                 // console.log(index)  0-9
@@ -179,7 +221,7 @@
                   item.hide = local[item.field]
                 }
               })
-              // console.log(channel_keys)
+              // console.log(task_keys)
               return arr
             })()
           ],
@@ -191,8 +233,8 @@
               // 此处表名可任意定义
               // console.log(input.name)    // city
               // console.log(input.checked) // true
-              // console.log(channel_keys)
-              layui.data('channel-filter-local', {
+              // console.log(task_keys)
+              layui.data('task-filter-local', {
                 key: input.name,
                 value: input.checked
               })
@@ -201,32 +243,38 @@
         })
       
         // 表头工具栏事件
-        table.on('toolbar(channel-table)', function (obj) {
-          if (obj.event === 'channel-toolbar-add') {
+        table.on('toolbar(task-table)', function (obj) {
+          if (obj.event === 'task-toolbar-add') {
             // 增加数据
-            $('#channel-form')[0].reset()
+            $('#task-form')[0].reset()
             layer.open({
               type: 1,
               shade: false,
-              content: $('#channel-form'),
+              content: $('#task-form'),
               area: ['50%', '80%']
             })
-            form.render($('#channel-form'))
+            form.render($('#task-form'))
           }
         })
       
         // 表内工具栏事件
-        table.on('tool(channel-table)', function (obj) {
-          if (obj.event === 'channel-tool-edit') {
+        table.on('tool(task-table)', function (obj) {
+          if (obj.event === 'task-tool-edit') {
             // 编辑
-            form.val('channel-edit-form', obj.data) // 将数据填充到表格中
+            // console.log(obj.data)
+            //var cities = obj.data.cities.split(':')
+            //cities.forEach(function (city) {
+            //  obj.data[city] = 'on'
+            //})
+            console.log(obj.data)
+            form.val('task-form', obj.data) // 将数据填充到表格中
             layer.open({
               type: 1,
               shade: false,
-              content: $('#channel-edit-form'),
+              content: $('#task-form'),
               area: ['50%', '80%']
             })
-          } else if (obj.event === 'channel-tool-del') {
+          } else if (obj.event === 'task-tool-del') {
             // 删除
             layer.confirm('真的删除行 [id: ' + obj.data.id + '] 么', function (index) {
               obj.del() // 删除对应行（tr）的DOM结构
@@ -234,7 +282,7 @@
               // 向服务端发送删除指令
               // 删除
               $.ajax({
-                url: `/api/v1/function/channel/${obj.data.id}`,
+                url: `/api/v1/function/task/${obj.data.id}`,
                 type: 'DELETE',
                 contentType: 'application/json',
                 headers: {
@@ -242,7 +290,7 @@
                 },
                 success: function (res) {
                   if (!res.code) {
-                    table.reloadData('channel-table') // 刷新表格
+                    table.reloadData('task-table') // 刷新表格
                     popup.success(res.msg)
                   }
                 },
@@ -251,7 +299,7 @@
                 }
               })
             })
-          } else if (obj.event == 'channel-tool-more') {
+          } else if (obj.event == 'task-tool-more') {
             // 更多 - 下拉菜单
             dropdown.render({
               elem: this, // 触发事件的 DOM 对象
@@ -279,7 +327,7 @@
                     // 向服务端发送删除指令
                     // 删除
                     $.ajax({
-                      url: `/api/v1/function/channel/${obj.data.id}`,
+                      url: `/api/v1/function/task/${obj.data.id}`,
                       type: 'DELETE',
                       contentType: 'application/json',
                       headers: {
@@ -287,7 +335,7 @@
                       },
                       success: function (res) {
                         if (!res.code) {
-                          table.reloadData('channel-table') // 刷新表格
+                          table.reloadData('task-table') // 刷新表格
                           popup.success(res.msg)
                         }
                       },
@@ -303,7 +351,7 @@
             })
           }
         })
-
+      
         // 表单 自定义验证规则
         form.verify({
           otherReq: function (value, item) {
@@ -339,7 +387,7 @@
         })
       
         // 表单提交按钮触发
-        form.on('submit(channel-form-add)', function (data) {
+        form.on('submit(task-form-add)', function (data) {
           var field = data.field
           let method, url
       
@@ -348,11 +396,11 @@
             // 增加
             field.id = null
             method = 'POST'
-            url = '/api/v1/function/channel'
+            url = '/api/v1/function/task'
           } else {
             // 修改
             method = 'PUT'
-            url = `/api/v1/function/channel/${field.id}`
+            url = `/api/v1/function/task/${field.id}`
           }
           $.ajax({
             url: url,
@@ -365,7 +413,7 @@
             success: function (res) {
               if (!res.code) {
                 layer.closeAll()
-                table.reloadData('channel-table')
+                table.reloadData('task-table')
                 popup.success(res.msg)
               }
             },
@@ -375,48 +423,37 @@
           })
           return false
         })
-
-        // 表单提交按钮触发
-        form.on('submit(channel-edit-form-add)', function (data) {
-          var field = data.field
-          let method, url
       
-          // console.log(field)
-          if (field.id == 0) {
-            // 增加
-            field.id = null
-            method = 'POST'
-            url = '/api/v1/function/channel'
-          } else {
-            // 修改
-            method = 'PUT'
-            url = `/api/v1/function/channel/${field.id}`
-          }
-          $.ajax({
-            url: url,
-            type: method,
-            contentType: 'application/json',
-            headers: {
-              'X-CSRF-TOKEN': getCookie('csrf_access_token')
-            },
-            data: JSON.stringify(field),
-            success: function (res) {
-              if (!res.code) {
-                layer.closeAll()
-                table.reloadData('channel-table')
-                popup.success(res.msg)
-              }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-              popup.failure(XMLHttpRequest.responseJSON.msg)
-            }
-          })
-          return false
+        // 时间选择器
+        laydate.render({
+          elem: '#task-form-interval',
+          type: 'time',
+          // min: '00:30:00'
+        })
+      
+        laydate.render({
+          elem: '#task-form-start-datetime',
+          type: 'datetime',
+          fullPanel: true
+        })
+      
+        laydate.render({
+          elem: '#task-form-end-datetime',
+          type: 'datetime',
+          fullPanel: true
         })
 
-        
+        laydate.render({
+          elem: '#task-form-task-start-datetime',
+          type: 'datetime',
+          fullPanel: true
+        })
       
-        
+        laydate.render({
+          elem: '#task-form-task-end-datetime',
+          type: 'datetime',
+          fullPanel: true
+        })
       })
     </script>
   </body>
