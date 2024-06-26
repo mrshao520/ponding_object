@@ -41,6 +41,15 @@ class BaseConfig:
     PONDING_EXTRACT = "http://127.0.0.1:8886/extract"
     # 高德API KEY设置
     GAODE_API = "3f9d8dabae7db3acf1612c15a3b1e150"
+
+    # model config
+    USE_MODEL = True
+    MODEL_PATH = "./static/model"  # 模型文件地址
+    MODEL_SCHEMA = ["日期", "时间", "城市", {"地点": ["描述", "深度值"]}]  # 模型模式
+    MODEL_DEVICE_ID = 0  # 模型 GPU id
+    MODEL_SAVE_DATA = True  # 模型处理后保存结果
+    MODEL_GET_LOCATION = True  # 模型处理后使用API获取经纬度
+
     # 保存文件设置
     UNTREATED_FILENAME = "./data/untreated.txt"
     CSV_FILENAME = "./data/data.csv"

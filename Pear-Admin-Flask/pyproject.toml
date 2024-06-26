@@ -16,6 +16,8 @@ flask-apscheduler = "^1.13.1"
 requests = "^2.32.3"
 loguru = "^0.7.2"
 gunicorn = "^22.0.0"
+eventlet = "^0.36.1"
+gevent = "^24.2.1"
 
 
 [tool.poetry.group.dev.dependencies]

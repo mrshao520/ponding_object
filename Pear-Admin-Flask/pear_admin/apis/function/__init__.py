@@ -2,6 +2,8 @@ from .ponding import ponding_api
 from .summary import summary_api 
 from .task import task_api
 from .channel import channel_api
+from .get_location import get_location
+from .format_time import format_datetime
 from flask import Blueprint
 
 function_api = Blueprint("function", __name__, url_prefix='/function')

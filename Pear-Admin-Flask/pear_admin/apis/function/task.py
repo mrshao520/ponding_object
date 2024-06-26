@@ -90,6 +90,7 @@ def create_task():
             start_date=data["task_start_datetime"],
             end_date=data["task_end_datetime"],
             replace_existing=True,
+            max_instances=100,
         )
     except Exception as e:
         logger.debug(f"get an exception: {e}")

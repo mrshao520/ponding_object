@@ -5,14 +5,14 @@ from flask_apscheduler.scheduler import APScheduler
 scheduler = APScheduler()
 
 
-def __scheduler_init(app):
+def __scheduler_init(app, scheduler_):
     """多进程环境下，Flask-APScheduler重复运行解决方案
 
     Args:
         app (_type_): Flask App
         scheduler_ (_type_): scheduler_
     """
-    scheduler_ = APScheduler()
+    # scheduler_ = APScheduler()
 
     if platform.system() != "Windows":
         # Linux 环境下

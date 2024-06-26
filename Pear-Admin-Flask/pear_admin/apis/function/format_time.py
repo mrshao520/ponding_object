@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+from loguru import logger
 
 
 def format_datetime(input_datetime: datetime, str_datetime: str):
@@ -33,18 +34,25 @@ def format_datetime(input_datetime: datetime, str_datetime: str):
             input_datetime.year, month, day
         ),
         r"(\d{4})/(\d{2})/(\d{2})": lambda year, month, day: datetime(year, month, day),
-        r"(\d{2})/(\d{2})": lambda year, month, day: datetime(
+        r"(\d{2})/(\d{2})": lambda month, day: datetime(
             input_datetime.year, month, day
         ),
     }
 
+    if str_datetime == "":
+        return None
     # 解析时间表达式
     for pattern, func in time_patterns.items():
         match = re.search(pattern, str_datetime)
         # print(str_datetime)
         if match:
-            match = [int(m) for m in match.groups()]
-            return func(*match)
+            try:
+                match = [int(m) for m in match.groups()]
+                format_time = func(*match)
+                return format_time
+            except Exception as e:
+                logger.debug(f"format_time throw an exception: {e}")
+                return None
     return None
 
 

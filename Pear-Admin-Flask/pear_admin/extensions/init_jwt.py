@@ -1,8 +1,8 @@
 from flask import redirect
+# from gevent import monkey; monkey.patch_all()
+# import eventlet; eventlet.monkey_patch(thread=True)
 from flask_jwt_extended import JWTManager
-
 from pear_admin.orms.user import UserORM
-
 # JSON Web Token 认证机制
 # 创建 JWTManager类的实例，处理JWT的中央对象
 jwt = JWTManager()
