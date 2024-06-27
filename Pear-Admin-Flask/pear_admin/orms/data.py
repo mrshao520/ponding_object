@@ -43,6 +43,23 @@ class DataPondingORM(BaseORM):
             return False
         # db.session.add(self)
         # db.session.commit()
+    
+    def exit(self):
+        existing = (
+            db.session.query(DataPondingORM)
+            .filter_by(
+                date=self.date,
+                city=self.city,
+                position=self.position,
+            )
+            .first()
+        )
+        if existing is None:
+            # 不存在
+            return False
+        else:
+            # 数据存在
+            return True
 
     def __repr__(self) -> str:
         return f"Ponding(id={self.id!r}, date={self.date!r}, time={self.time!r} \

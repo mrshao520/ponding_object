@@ -60,7 +60,7 @@ class UIE_Model:
             list: 后处理结果
         """
         now = datetime.now()
-        logger.info(f"当前时间: {now}")
+        logger.info(f"当前时间: {now} -- handle_results")
         # csv_filename = BaseConfig.CSV_FILENAME.format(time=now)
         csv_headers = BaseConfig.CSV_HEADERS
 
@@ -93,23 +93,14 @@ class UIE_Model:
             date = self.get_valid_data(res.get("日期", ""))
             time = self.get_valid_data(res.get("时间", ""))
 
-            if len(date) > 19:
-                logger.debug(f"时间长度错误: {date} - length : {len(date)}")
-                continue
-
-            # -------------对时间特殊处理：固定格式 2023-07-18 08:23:01
-            tmpDate = re.split("/", date)
-            if len(tmpDate) > 2:
-                # 时间格式为 2023/07/18 08:23:01
-                date = "-".join(tmpDate)
-
-            tmpDate = re.split("-", date)
-            if len(tmpDate) < 2:
-                logger.debug(f"error datetime format")
+            try:
+                date = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            except Exception as e:
+                logger.debug(f"error date format {date} : {e}")
                 continue
 
             for pos in position:
-                pos["date"] = date
+                pos["date"] = date.strftime("%Y-%m-%d %H:%M:%S")
                 pos["time"] = time
                 pos["city"] = city
                 # 格式化结果
@@ -117,8 +108,7 @@ class UIE_Model:
                     # 格式化积水深度值
                     pos["format_depth_value"] = format_value(pos.get("depth_value", ""))
                     # 格式化时间
-                    pos_date = datetime.strptime(pos["date"])
-                    pos["format_time"] = format_datetime(pos_date, pos["time"])
+                    pos["format_time"] = format_datetime(date, pos["time"])
                 # 获取经纬度
                 if BaseConfig.MODEL_GET_LOCATION:
                     address = city + pos["position"]
@@ -132,8 +122,8 @@ class UIE_Model:
                 # 保存数据
                 with scheduler.app.app_context():
                     ponding = DataPondingORM(**pos)
-                    result = ponding.save()
-                if result and BaseConfig.MODEL_SAVE_DATA:
+                    result = ponding.exit()
+                if not result and BaseConfig.MODEL_SAVE_DATA:
                     if treated_local_file is None:
                         treated_local_file = BaseConfig.TREATED_DATA_FILE
                     ponding_list = [pos.get(header, None) for header in csv_headers]

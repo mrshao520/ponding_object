@@ -121,6 +121,17 @@ class FtpUtil:
         else:
             logger.info(f"远程路径存在{remotepath}")
             return True
+    
+    # 删除文件
+    def deletfile(self, remotefile):
+        remotepath, remotefile_name = os.path.split(remotefile)
+        if self.is_exist(remotepath, remotefile_name):
+            self.ftp.delete(remotefile_name)
+            logger.info(f"远程文件已删除: {remotefile_name}")
+            return True
+        else:
+            logger.info(f"远程文件不存在: {remotefile_name}")
+            return False
 
     # 删除文件
     def deletfile(self, filename, remotepath):
@@ -131,6 +142,7 @@ class FtpUtil:
         else:
             logger.info(f"远程文件不存在: {filename}")
             return False
+    
 
     # 删除文件夹
     def deletedir(self, remotepath):

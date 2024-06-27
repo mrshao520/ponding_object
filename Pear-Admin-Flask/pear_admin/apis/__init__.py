@@ -23,10 +23,12 @@ def register_apis(app: Flask):
     apis.register_blueprint(user_api)
     # 自定义蓝图
     apis.register_blueprint(function_api)
-    
+
     # 模型
     if BaseConfig.USE_MODEL:
         from .model import model_api
         apis.register_blueprint(model_api)
+    else:
+        from pear_admin.apis.function.task_function_result import task_function_result
 
     app.register_blueprint(apis)

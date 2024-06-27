@@ -58,7 +58,7 @@ class BaseConfig:
     FTP_PASSIVE = True
 
     # 保存文件设置
-    REMOTE_PATH = "/ponding/ponding_server/pear_admin_flask"
+    REMOTE_PATH = "/ponding/ponding_server/pear-admin-flask"
     UNTREATED_DATA_FILE = "./data/untreated_data.txt"  # 爬虫爬取的文件
     TREATED_DATA_FILE = "./data/treated_data.csv"  # 模型处理后的数据文件，不包含经纬度
     DATA_FILE = "./data/data.csv"  # 含有经纬度的数据文件
