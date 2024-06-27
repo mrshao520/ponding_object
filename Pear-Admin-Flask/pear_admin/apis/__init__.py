@@ -1,5 +1,5 @@
 from flask import Blueprint, Flask
-
+from configs import BaseConfig
 from .function import function_api
 from .department import department_api
 from .passport import passport_api
@@ -23,5 +23,10 @@ def register_apis(app: Flask):
     apis.register_blueprint(user_api)
     # 自定义蓝图
     apis.register_blueprint(function_api)
+    
+    # 模型
+    if BaseConfig.USE_MODEL:
+        from .model import model_api
+        apis.register_blueprint(model_api)
 
     app.register_blueprint(apis)

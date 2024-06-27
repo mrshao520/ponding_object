@@ -4,6 +4,8 @@ from loguru import logger
 
 
 def format_datetime(input_datetime: datetime, str_datetime: str):
+    if str_datetime == "":
+        return None
     # 定义时间表达式的正则模式
     time_patterns = {
         # 年份+月份+日期
@@ -38,9 +40,6 @@ def format_datetime(input_datetime: datetime, str_datetime: str):
             input_datetime.year, month, day
         ),
     }
-
-    if str_datetime == "":
-        return None
     # 解析时间表达式
     for pattern, func in time_patterns.items():
         match = re.search(pattern, str_datetime)

@@ -1,6 +1,9 @@
 import fastdeploy
 from fastdeploy.text import UIEModel, SchemaLanguage
-from pear_admin.apis.function import get_location, format_time
+from pear_admin.apis.function import get_location, format_datetime, format_value
+from pear_admin.extensions import scheduler
+from pear_admin.orms import DataPondingORM
+from datetime import datetime
 from loguru import logger
 from configs import BaseConfig
 import csv
@@ -40,11 +43,13 @@ class UIE_Model:
 
         return runtime_option
 
-    def predict(self, city: list, texts: list):
+    def predict(self, city: list, texts: list, treated_local_file=None):
         results = self.uie.predict(texts, return_dict=True)
-        return self.handle_results(city, results)
+        return self.handle_results(city, results, treated_local_file=None)
 
-    def handle_results(self, cityName: list, results: list) -> list:
+    def handle_results(
+        self, cityName: list, results: list, treated_local_file=None
+    ) -> list:
         """对模型的输出结果进一步处理
 
         Args:
@@ -54,12 +59,11 @@ class UIE_Model:
         Returns:
             list: 后处理结果
         """
-        # 配置文件，保存的文件路径
-        untreated_filename = BaseConfig.UNTREATED_FILENAME
-        csv_filename = BaseConfig.CSV_FILENAME
+        now = datetime.now()
+        logger.info(f"当前时间: {now}")
+        # csv_filename = BaseConfig.CSV_FILENAME.format(time=now)
         csv_headers = BaseConfig.CSV_HEADERS
 
-        
         # logger.info(f"抽取后的结果 : {results}")
         handle_res = []
         for res in results:
@@ -108,6 +112,13 @@ class UIE_Model:
                 pos["date"] = date
                 pos["time"] = time
                 pos["city"] = city
+                # 格式化结果
+                if BaseConfig.MODEL_FORMAT_RES:
+                    # 格式化积水深度值
+                    pos["format_depth_value"] = format_value(pos.get("depth_value", ""))
+                    # 格式化时间
+                    pos_date = datetime.strptime(pos["date"])
+                    pos["format_time"] = format_datetime(pos_date, pos["time"])
                 # 获取经纬度
                 if BaseConfig.MODEL_GET_LOCATION:
                     address = city + pos["position"]
@@ -119,11 +130,16 @@ class UIE_Model:
                     pos["longitude"] = longitude
                     pos["latitude"] = latitude
                 # 保存数据
-                if BaseConfig.MODEL_SAVE_DATA:
+                with scheduler.app.app_context():
+                    ponding = DataPondingORM(**pos)
+                    result = ponding.save()
+                if result and BaseConfig.MODEL_SAVE_DATA:
+                    if treated_local_file is None:
+                        treated_local_file = BaseConfig.TREATED_DATA_FILE
                     ponding_list = [pos.get(header, None) for header in csv_headers]
                     # 打开CSV文件
                     with open(
-                        csv_filename, mode="a", newline="", encoding="utf-8"
+                        treated_local_file, mode="a", newline="", encoding="utf-8"
                     ) as csvfile:
                         # 创建CSV写入器
                         writer = csv.writer(csvfile)
@@ -132,7 +148,7 @@ class UIE_Model:
                             writer.writerow(csv_headers)
                         # 写入数据
                         writer.writerow(ponding_list)
-                # 添加结果    
+                # 添加结果
                 handle_res.append(pos)
         return handle_res
 

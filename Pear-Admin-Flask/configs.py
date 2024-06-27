@@ -43,18 +43,45 @@ class BaseConfig:
     GAODE_API = "3f9d8dabae7db3acf1612c15a3b1e150"
 
     # model config
-    USE_MODEL = True
+    USE_MODEL = False  # 是否使用GPU服务模块
     MODEL_PATH = "./static/model"  # 模型文件地址
     MODEL_SCHEMA = ["日期", "时间", "城市", {"地点": ["描述", "深度值"]}]  # 模型模式
     MODEL_DEVICE_ID = 0  # 模型 GPU id
     MODEL_SAVE_DATA = True  # 模型处理后保存结果
-    MODEL_GET_LOCATION = True  # 模型处理后使用API获取经纬度
+    MODEL_GET_LOCATION = False  # 模型处理后使用API获取经纬度
+    MODEL_FORMAT_RES = True  # 在model模块中进行格式化结果
+
+    # ftp config
+    FTP_USER = "pmsc_cps_user"
+    FTP_HOST = "10.0.65.153"
+    FTP_PASSWORD = "Y6zXTwdpDKcjMMWX"
+    FTP_PASSIVE = True
 
     # 保存文件设置
-    UNTREATED_FILENAME = "./data/untreated.txt"
-    CSV_FILENAME = "./data/data.csv"
+    REMOTE_PATH = "/ponding/ponding_server/pear_admin_flask"
+    UNTREATED_DATA_FILE = "./data/untreated_data.txt"  # 爬虫爬取的文件
+    TREATED_DATA_FILE = "./data/treated_data.csv"  # 模型处理后的数据文件，不包含经纬度
+    DATA_FILE = "./data/data.csv"  # 含有经纬度的数据文件
+    RESULTS_DATA_FILE = "./data/results.csv"  # 汇总数据文件
+    DATA_CITIES = [
+        "北京",
+        "上海",
+        "深圳",
+        "广州",
+        "杭州",
+        "成都",
+        "天津",
+        "合肥",
+        "东莞",
+        "武汉",
+        "西安",
+        "重庆",
+        "郑州",
+        "南京",
+        "济南",
+    ]
+    # CSV_FILENAME = "./data/data_{time:%Y_%m_%d_%H}.csv"
     CSV_HEADERS = [
-        "id",
         "date",
         "time",
         "format_time",

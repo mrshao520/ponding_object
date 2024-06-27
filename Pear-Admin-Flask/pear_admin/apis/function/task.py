@@ -3,7 +3,7 @@ from flask_sqlalchemy.pagination import Pagination
 from pear_admin.extensions import db, scheduler
 from pear_admin.orms import TaskORM
 from datetime import datetime
-from .task_function import task_function
+from .task_function import task_function_crawling
 from loguru import logger
 
 task_api = Blueprint("task", __name__)
@@ -71,7 +71,7 @@ def create_task():
         task.save()
         # 增加定时任务
         scheduler.add_job(
-            func=task_function,
+            func=task_function_crawling,
             trigger="interval",
             id=str(task.id),
             kwargs={
@@ -144,7 +144,7 @@ def change_task(uid):
         # print(task_obj.id)
         scheduler.modify_job(
             id=str(task_obj.id),
-            func=task_function,
+            func=task_function_crawling,
             trigger="interval",
             kwargs={
                 "id": str(task_obj.id),

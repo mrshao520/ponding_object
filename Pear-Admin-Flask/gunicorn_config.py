@@ -1,7 +1,7 @@
 import os
 import multiprocessing
 
-debug = False  # 开启 debug 模式
+debug = True  # 开启 debug 模式
 
 bind = "0.0.0.0:5000"  # 绑定IP和端口号
 # worker_class = "gevent"  # 使用 gevent 模式
