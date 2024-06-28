@@ -1,7 +1,7 @@
 channel,command,effective_number,number,total_effective_number,total_number,recording_time,status,information
-抖音,/opt/ponding/pachong/Douyin python start_douyin.py city start_datetime end_datetime,0,0,0,0,,,
-搜狐,/opt/ponding/pachong/Souhu python start_souhu.py city start_datetime end_datetime,0,0,0,0,,,
-微博,/opt/ponding/pachong/Weibo python start_Weibo.py city start_datetime end_datetime,0,0,0,0,,,
-腾讯,/opt/ponding/pachong/Tengxun python start_tengxun.py city start_datetime end_datetime,0,0,0,0,,,
-百度,/opt/ponding/pachong/Baidu python start_baidu.py city start_datetime end_datetime,0,0,0,0,,,
-头条,/opt/ponding/pachong/Toutiao python start_toutiao.py city start_datetime end_datetime,0,0,0,0,,,
+抖音,/home/pmsc_cps_user/ponding/pachong/Douyin /home/pmsc_cps_user/anaconda3/bin/python start_douyin.py city start_datetime end_datetime,0,0,0,0,,,
+搜狐,/home/pmsc_cps_user/ponding/pachong/Souhu /home/pmsc_cps_user/anaconda3/bin/python start_souhu.py city start_datetime end_datetime,0,0,0,0,,,
+微博,/home/pmsc_cps_user/ponding/pachong/Weibo /home/pmsc_cps_user/anaconda3/bin/python start_Weibo.py city start_datetime end_datetime,0,0,0,0,,,
+腾讯,/home/pmsc_cps_user/ponding/pachong/Tengxun /home/pmsc_cps_user/anaconda3/bin/python start_tengxun.py city start_datetime end_datetime,0,0,0,0,,,
+百度,/home/pmsc_cps_user/ponding/pachong/Baidu /home/pmsc_cps_user/anaconda3/bin/python start_baidu.py city start_datetime end_datetime,0,0,0,0,,,
+头条,/home/pmsc_cps_user/ponding/pachong/Toutiao /home/pmsc_cps_user/anaconda3/bin/python start_toutiao.py city start_datetime end_datetime,0,0,0,0,,,

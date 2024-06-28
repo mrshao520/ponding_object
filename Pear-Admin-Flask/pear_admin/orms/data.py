@@ -76,7 +76,7 @@ class DataPondingORM(BaseORM):
             "date": self.date.strftime("%Y-%m-%d %H:%M:%S"),
             "time": self.time,
             "format_time": (
-                self.format_time.strftime("%Y-%m-%d")
+                self.format_time.strftime("%Y-%m-%d %H:%M:%S")
                 if self.format_time
                 else None
             ),

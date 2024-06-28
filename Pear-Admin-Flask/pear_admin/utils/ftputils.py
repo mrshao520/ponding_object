@@ -31,10 +31,16 @@ class FtpUtil:
         if not os.path.isfile(localfile):
             logger.info(f"{localfile} 不是文件!")
         # filename = os.path.split(localfile)[-1]  # 获取文件名
-        remotepath, remotefile_name = os.path.split(remotefile)        
-        self.ftp.cwd(remotepath)
-        with open(localfile, "rb") as file:  # 读取文件
-            self.ftp.storbinary(f"STOR {remotefile_name}", file)  # 二进制存储
+        remotepath, remotefile_name = os.path.split(remotefile)
+        if self.is_exist(remotepath, None): # 判断远程路径是否存在        
+            # self.ftp.cwd(remotepath)
+            with open(localfile, "rb") as file:  # 读取文件
+                self.ftp.storbinary(f"STOR {remotefile_name}", file)  # 二进制存储
+            logger.info(f"上传文件成功: {remotefile}")
+            return True
+        else:
+            logger.info(f"上传文件失败: {remotefile}")
+            return False
 
     # 上传文件夹
     def uploaddir(self, localdir, remotepath):
@@ -72,6 +78,12 @@ class FtpUtil:
 
     # 下载文件
     def downloadfile(self, localfile, remotefile):
+        """下载文件
+
+        Args:
+            localfile (_type_): 本地文件
+            remotefile (_type_): 远程文件
+        """
         remotepath, remotefile_name = os.path.split(remotefile)
         if self.is_exist(remotepath, remotefile_name):  # 判断文件是否存在
             with open(localfile, "wb") as file:
@@ -79,7 +91,7 @@ class FtpUtil:
             logger.info(f"文件下载成功：{localfile}")
             return True
         else:
-            logger.info(f"文件不存在: {localfile}")
+            logger.info(f"文件不存在: {remotefile}")
             return False
 
     # 下载文件夹
@@ -114,12 +126,12 @@ class FtpUtil:
         if filename is not None:
             filelist = self.ftp.nlst()
             if filename in filelist:
-                logger.info(f"存在该文件{filename}")
+                logger.info(f"存在该文件: {filename}")
                 return True
             else:
-                logger.info(f"没有该文件{filename}")
+                logger.info(f"没有该文件: {filename}")
         else:
-            logger.info(f"远程路径存在{remotepath}")
+            logger.info(f"远程路径存在: {remotepath}")
             return True
     
     # 删除文件
@@ -127,21 +139,21 @@ class FtpUtil:
         remotepath, remotefile_name = os.path.split(remotefile)
         if self.is_exist(remotepath, remotefile_name):
             self.ftp.delete(remotefile_name)
-            logger.info(f"远程文件已删除: {remotefile_name}")
+            logger.info(f"远程文件已删除: {remotefile}")
             return True
         else:
-            logger.info(f"远程文件不存在: {remotefile_name}")
+            logger.info(f"远程文件不存在: {remotefile}")
             return False
 
     # 删除文件
-    def deletfile(self, filename, remotepath):
-        if self.is_exist(remotepath, filename):
-            self.ftp.delete(filename)
-            logger.info(f"远程文件已删除: {filename}")
-            return True
-        else:
-            logger.info(f"远程文件不存在: {filename}")
-            return False
+    # def deletfile(self, filename, remotepath):
+    #     if self.is_exist(remotepath, filename):
+    #         self.ftp.delete(filename)
+    #         logger.info(f"远程文件已删除: {filename}")
+    #         return True
+    #     else:
+    #         logger.info(f"远程文件不存在: {filename}")
+    #         return False
     
 
     # 删除文件夹
@@ -154,7 +166,8 @@ class FtpUtil:
                     if file.find(".") == -1:
                         self.deletedir(new_remotepath)
                     else:
-                        self.deletfile(file, remotepath)
+                        self.deletfile(new_remotepath)
+                        # self.deletfile(file, remotepath)
             self.ftp.rmd(remotepath)
             logger.info(f"远程文件夹删除成功: {remotepath}")
             return True

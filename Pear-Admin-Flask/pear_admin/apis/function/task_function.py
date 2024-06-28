@@ -5,12 +5,11 @@ from configs import BaseConfig
 from pear_admin.extensions import db
 from pear_admin.orms import DataPondingORM, ChannelsORM
 from pear_admin.extensions import scheduler
-from .format_time import format_datetime
+from . import format_datetime, format_value
 import subprocess
 import requests
 import csv
 import json
-import re, os
 
 
 def task_function_crawling(
@@ -345,20 +344,3 @@ def task_function(
     with scheduler.app.app_context():
         channel_info.save()
     return True
-
-
-def format_value(depth: str):
-    if depth == "":
-        return None
-    numbers = re.findall(r"\d+\.\d+|\d+", depth)
-    # print(numbers)
-    if not numbers:
-        return None
-    number = int(numbers[0])  # 获取第一个数字
-    if "cm" in depth or "CM" in depth or "厘米" in depth or "公分" in depth:
-        return f"{number}cm"
-    if "mm" in depth or "MM" in depth or "毫米" in depth:
-        return f"{number // 100}cm"
-    elif "m" in depth or "M" in depth or "米" in depth:
-        return f"{number * 100}cm"
-    return None

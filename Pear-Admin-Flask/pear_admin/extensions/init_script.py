@@ -5,6 +5,7 @@ import re
 from flask import Flask, current_app
 
 from pear_admin.extensions import db
+
 from pear_admin.orms import (
     DepartmentORM,
     RightsORM,
@@ -15,7 +16,7 @@ from pear_admin.orms import (
 )
 from datetime import datetime
 from configs import DevelopmentConfig
-from pear_admin.apis.function.format_time import format_datetime
+from pear_admin.apis.function import format_value, format_datetime
 
 def dict_to_orm(d, o):
     for k, v in d.items():
@@ -100,7 +101,7 @@ def register_script(app: Flask):
             print(f"{e}")
 
 
-def ponding_to_orm(d, o):
+def ponding_to_orm_no_format(d, o):
     for k, v in d.items():
         if k == "date":
             o.date = datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
@@ -120,6 +121,19 @@ def ponding_to_orm(d, o):
             except:
                 print(f"{k}-{v}-{d}")
                 exit
+                
+def ponding_to_orm(d, o):
+    for k, v in d.items():
+        if k == "date":
+            o.date = datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
+        elif k == "format_time" and v:
+            o.format_time = datetime.strptime(v, "%Y-%m-%d %H:%M:%S")
+        else:
+            try:
+                setattr(o, k, v or None)
+            except:
+                print(f"{k}-{v}-{d}")
+                exit
 
 
 def ponding_to_databases(path, orm):
@@ -130,17 +144,4 @@ def ponding_to_databases(path, orm):
             db.session.add(o)
             db.session.flush()
         db.session.commit()
-        
-def format_value(depth:str):
-    numbers = re.findall(r"\d+\.\d+|\d+", depth)
-    # print(numbers)
-    if not numbers:
-            return 
-    number = float(numbers[0]) # 获取第一个数字    
-    if 'cm' in depth or 'CM' in depth or '厘米' in depth or '公分' in depth:
-        return f'{number}cm'
-    if 'mm' in depth or 'MM' in depth or '毫米' in depth:
-        return f'{number // 100}cm'
-    elif 'm' in depth or 'M' in depth or '米' in depth:
-        return f'{number * 100}cm'
-    return 
+    

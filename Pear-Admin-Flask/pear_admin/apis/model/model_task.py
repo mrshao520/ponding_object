@@ -12,7 +12,8 @@ from pathlib import Path
 @scheduler._scheduler.scheduled_job(
     id="model_task_get_untreated",
     trigger="interval",
-    hours=1,
+    # hours=1,
+    minutes=5,  # for test
     start_date="2024-06-26 00:40:00",
     end_date="2034-06-26 00:00:00",
     max_instances=100,
@@ -69,7 +70,7 @@ def model_task_get_untreated():
         return False
     # FTP 上传文件
     ftp_client = FtpUtil()
-    ftp_client.deletfile(treated_data_file, remote_path)
+    # ftp_client.deletfile(treated_remote_file)
     ftp_client.uploadfile(treated_local_file, treated_remote_file)
     ftp_client.close()
 
@@ -77,7 +78,8 @@ def model_task_get_untreated():
 @scheduler._scheduler.scheduled_job(
     id="model_task_get_data",
     trigger="interval",
-    hours=1,
+    # hours=1,
+    minutes=5,  # for test
     start_date="2024-06-26 00:57:00",
     end_date="2034-06-26 00:00:00",
     max_instances=100,
@@ -88,7 +90,7 @@ def model_task_get_data():
     csv_headers = BaseConfig.CSV_HEADERS
     # 配置文件中的文件和路径
     remote_path = BaseConfig.REMOTE_PATH  # 远程路径
-    data_file = BaseConfig.TREATED_DATA_FILE
+    data_file = BaseConfig.DATA_FILE
     results_data_file = BaseConfig.RESULTS_DATA_FILE
     # 远程文件
     data_remote_file = str(Path(remote_path) / Path(data_file))
@@ -107,6 +109,9 @@ def model_task_get_data():
     ftp_client.deletfile(data_remote_file)
     ftp_client.close()
 
+    if not os.path.exists(results_data_file):
+        logger.info(f"最终结果文件不存在: {results_data_file}")
+
     # 打开源CSV文件，读取数据
     with open(data_local_file, mode="r", encoding="utf-8") as source_file:
         with open(
@@ -117,10 +122,21 @@ def model_task_get_data():
             dest_writer = csv.writer(dest_file)
             # 遍历CSV文件的每一行
             for row in source_reader:
-                ponding = DataPondingORM(**row)
-                result = ponding.save()
+                row["date"] = datetime.strptime(row["date"], "%Y-%m-%d %H:%M:%S")
+                row["format_time"] = (
+                    datetime.strptime(row["format_time"], "%Y-%m-%d %H:%M:%S")
+                    if row["format_time"]
+                    else None
+                )
+                with scheduler.app.app_context():
+                    ponding = DataPondingORM(**row)
+                    result = ponding.save()
+                    ponding_json = ponding.json()
                 if not result:
                     continue
-                ponding_list = [row.get(header, None) for header in csv_headers]
+                ponding_list = [
+                    ponding_json.get(header, None) for header in csv_headers
+                ]
                 # 写入数据
                 dest_writer.writerow(ponding_list)
+    logger.info(f"已保存到数据库和最终结果文件中!")

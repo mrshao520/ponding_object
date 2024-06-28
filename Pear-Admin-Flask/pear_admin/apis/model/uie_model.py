@@ -45,7 +45,7 @@ class UIE_Model:
 
     def predict(self, city: list, texts: list, treated_local_file=None):
         results = self.uie.predict(texts, return_dict=True)
-        return self.handle_results(city, results, treated_local_file=None)
+        return self.handle_results(city, results, treated_local_file)
 
     def handle_results(
         self, cityName: list, results: list, treated_local_file=None
@@ -153,7 +153,7 @@ class UIE_Model:
             max_pro = 0.0
             text = ""
             for val in values:
-                logger.info(val)
+                # logger.info(val)
                 tmp = val.get("probability", 0.0)
                 if tmp > max_pro:
                     max_pro = tmp

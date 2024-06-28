@@ -3,6 +3,23 @@ from datetime import datetime
 from loguru import logger
 
 
+def format_value(depth: str):
+    if depth == "":
+        return None
+    numbers = re.findall(r"\d+\.\d+|\d+", depth)
+    # print(numbers)
+    if not numbers:
+        return None
+    number = float(numbers[0])  # 获取第一个数字
+    if "cm" in depth or "CM" in depth or "厘米" in depth or "公分" in depth:
+        return f"{number}cm"
+    if "mm" in depth or "MM" in depth or "毫米" in depth:
+        return f"{number / 10}cm"
+    elif "m" in depth or "M" in depth or "米" in depth:
+        return f"{number * 100}cm"
+    return None
+
+
 def format_datetime(input_datetime: datetime, str_datetime: str):
     if str_datetime == "":
         return None
@@ -20,7 +37,11 @@ def format_datetime(input_datetime: datetime, str_datetime: str):
         r"(\d+)[日|号]": lambda day: datetime(
             year=input_datetime.year, month=input_datetime.month, day=day
         ),
-        r"今|当": lambda: input_datetime,
+        r"今|当": lambda: datetime(
+            year=input_datetime.year,
+            month=input_datetime.month,
+            day=input_datetime.day,
+        ),
         r"昨": lambda: datetime(
             year=input_datetime.year,
             month=input_datetime.month,

@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from flask_sqlalchemy.pagination import Pagination
 from pear_admin.extensions import db
-from pear_admin.orms import DataPondingORM, DataSummaryORM
+from pear_admin.orms import DataPondingORM
 from datetime import datetime
 from loguru import logger
 
@@ -96,7 +96,7 @@ def create_ponding():
     data["date"] = date
     format_time = data.get("format_time")
     if format_time:
-        data["format_time"] = datetime.strptime(data.get("format_time"), "%Y-%m-%d")
+        data["format_time"] = datetime.strptime(data.get("format_time"), "%Y-%m-%d %H:%M:%S")
     else:
         data["format_time"] = None
     ponding = DataPondingORM(**data)
@@ -125,7 +125,7 @@ def change_ponding(uid):
         if key == "date":
             value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
         elif key == "format_time" and value:
-            value = datetime.strptime(value, "%Y-%m-%d")
+            value = datetime.strptime(value, "%Y-%m-%d %H:%M:%S")
         setattr(ponding_obj, key, value)
 
     ponding_obj.change()
