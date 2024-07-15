@@ -65,6 +65,10 @@ def model_task_get_untreated():
     uie = UIE_Model()
     results = uie.predict(cities, content, treated_local_file)
 
+    if len(results) == 0:
+        logger.info("未提取有效信息!")
+        return
+
     if not os.path.exists(treated_local_file):
         logger.info(f"{treated_local_file} 不存在，返回！")
         return False

@@ -8,7 +8,7 @@ bind = "0.0.0.0:5000"  # 绑定IP和端口号
 # worker_class = "eventlet"  # 使用 eventlet 模式
 # workers = multiprocessing.cpu_count()  # 进程数
 workers = 1
-# threads = 10  # 线程数
+threads = 20  # 线程数
 # daemon = True  # 后台运行
 # preload_app = True  # 解决多worker运行定时任务重复执行问题
 
